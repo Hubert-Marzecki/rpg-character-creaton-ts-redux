@@ -1,12 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { Dispatch } from "react";
 
-export interface AppState {
+export interface AppStateRace {
  race:string
 
 }
 
-let initState = (): AppState => {
+let initState = (): AppStateRace => {
   return {
    race: "dwarf"
 
@@ -21,7 +21,7 @@ export const slice = createSlice({
 
     // INCREMENT STATS + MODIFY VALUE
 
-    changeRace: state => {
+    changeRace: (state) => {
      
       state.race = "dwarf"
 

@@ -1,5 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
+import ReactDOM from 'react-dom';
 import { Dispatch } from "react";
+import { Stats } from "./Stats";
+import { Visibility } from "semantic-ui-react";
 
 export interface AppState {
   value: number;
@@ -15,7 +18,9 @@ export interface AppState {
   conModi: number,
   winModi: number,
   charModi: number,
-  field: string,
+  points: number,
+  race: string,
+  styleButtonDisplay: string;
 
 }
 
@@ -34,8 +39,9 @@ let initState = (): AppState => {
     conModi: 0,
     winModi: 0,
     charModi: 0,
-    field: ""
-
+    points: 30,
+    race: "",
+    styleButtonDisplay: "hidden_button",
   };
 };
 
@@ -51,12 +57,16 @@ export const slice = createSlice({
 
     },
     incrementStr: state => {
-      if (state.str === 18) {
+      if (state.str === 18 || 
+        (state.str + state.dex+ state.int + state.con + state.win + state.char) === 90 ) {
         return
       }
       state.str += 1;
+      state.points -= 1;
+
       if (state.str === 3) {
         state.strModi = -4;
+       
       }
       if (state.str === 5) {
         state.strModi = -3;
@@ -83,12 +93,13 @@ export const slice = createSlice({
         state.strModi = 4;
       }
     },
-
     incrementDex: state => {
-      if (state.dex === 18) {
-        return
+      if (state.dex === 18 || 
+        (state.str + state.dex+ state.int + state.con + state.win + state.char) === 90 ) {
+        return 
       }
       state.dex += 1;
+      state.points -= 1;
 
       if (state.dex === 3) {
         state.dexModi = -4;
@@ -120,20 +131,265 @@ export const slice = createSlice({
     },
     incrementInt: state => {
  
+      if (state.int === 18 || 
+        (state.str + state.dex+ state.int + state.con + state.win + state.char) === 90 ) {
+        return 
+      
+      }
       state.int += 1;
+      state.points -= 1;
+
+      if (state.int === 3) {
+        state.intModi = -4;
+       
+      }
+      if (state.int === 5) {
+        state.intModi = -3;
+      }
+      if (state.int === 7) {
+        state.intModi = -2;
+      }
+      if (state.int === 9) {
+        state.intModi = -1;
+      }
+      if (state.int === 10 ) {
+        state.intModi = 0;
+      }
+      if (state.int === 12) {
+        state.intModi = 1;
+      }
+      if (state.int === 14) {
+        state.intModi = 2;
+      }
+      if (state.int === 16) {
+        state.intModi = 3;
+      }
+      if (state.int === 18) {
+        state.intModi = 4;
+      }
+ 
     },
     incrementCon: state => {
 
+      if (state.con === 18 || 
+        (state.str + state.dex+ state.con + state.int + state.win + state.char) === 90 ) {
+        return
+      }
       state.con += 1;
+      state.points -= 1;
+
+      if (state.con === 3) {
+        state.intModi = -4;
+       
+      }
+      if (state.con === 5) {
+        state.conModi = -3;
+      }
+      if (state.con === 7) {
+        state.conModi = -2;
+      }
+      if (state.con === 9) {
+        state.conModi = -1;
+      }
+      if (state.con === 10 ) {
+        state.conModi = 0;
+      }
+      if (state.con === 12) {
+        state.conModi = 1;
+      }
+      if (state.con === 14) {
+        state.conModi = 2;
+      }
+      if (state.con === 16) {
+        state.conModi = 3;
+      }
+      if (state.con === 18) {
+        state.conModi = 4;
+      }
     },
     incrementWin: state => {
  
+      if (state.win === 18 || 
+        (state.int + state.dex+ state.str + state.con + state.win + state.char) === 90 ) {
+        return
+      }
       state.win += 1;
+      state.points -= 1;
+
+      if (state.win === 3) {
+        state.winModi = -4;
+       
+      }
+      if (state.win === 5) {
+        state.winModi = -3;
+      }
+      if (state.win === 7) {
+        state.winModi = -2;
+      }
+      if (state.win === 9) {
+        state.winModi = -1;
+      }
+      if (state.win === 10 ) {
+        state.winModi = 0;
+      }
+      if (state.win === 12) {
+        state.winModi = 1;
+      }
+      if (state.win === 14) {
+        state.winModi = 2;
+      }
+      if (state.win === 16) {
+        state.winModi = 3;
+      }
+      if (state.win === 18) {
+        state.winModi = 4;
+      }
     },
     incrementChar: state => {
  
+      if (state.int === 18 || 
+        (state.str + state.dex+ state.int + state.con + state.win + state.char) === 90 ) {
+        return
+      }
       state.char += 1;
+      state.points -= 1;
+
+      if (state.char === 3) {
+        state.charModi = -4;
+       
+      }
+      if (state.char === 5) {
+        state.charModi = -3;
+      }
+      if (state.char === 7) {
+        state.charModi = -2;
+      }
+      if (state.char === 9) {
+        state.charModi = -1;
+      }
+      if (state.char === 10 ) {
+        state.charModi = 0;
+      }
+      if (state.char === 12) {
+        state.charModi = 1;
+      }
+      if (state.char === 14) {
+        state.charModi = 2;
+      }
+      if (state.char === 16) {
+        state.charModi = 3;
+      }
+      if (state.char === 18) {
+        state.charModi = 4;
+      }
     },
+
+    dwarfStats: state => {
+      state.str = 10;
+      state.strModi = 0;
+      state.dex = 10;
+      state.dexModi = 0;
+      state.con = 12;
+      state.conModi = 1;
+      state.int = 10;
+      state.intModi = 0;
+      state.win = 12;
+      state.winModi =1;
+      state.char = 8;
+      state.charModi = -1;
+    
+    },
+
+    elfStats: state => {
+      state.str = 10;
+      state.strModi = 0;
+      state.dex = 12;
+      state.dexModi = 1;
+      state.con = 8;
+      state.conModi = -1;
+      state.int = 12;
+      state.intModi =1;
+      state.win = 10;
+      state.winModi =0;
+      state.char = 10;
+      state.charModi = 0;
+    
+    },
+    gnomeStats: state => {
+      state.str = 8;
+      state.strModi = -1;
+      state.dex = 10;
+      state.dexModi = 0;
+      state.con = 12;
+      state.conModi = 1;
+      state.int = 10;
+      state.intModi =0;
+      state.win = 10;
+      state.winModi =0;
+      state.char = 12;
+      state.charModi =1;
+   
+    
+    },
+    halfElfStats: state => {
+      state.str = 10;
+      state.strModi = 0;
+      state.dex = 10;
+      state.dexModi = 0;
+      state.con = 10;
+      state.conModi = 0;
+      state.int = 10;
+      state.intModi =0;
+      state.win = 10;
+      state.winModi =0;
+      state.char = 10;
+      state.charModi =0;
+    },
+    halfOrcStats: state => {
+      state.str = 10;
+      state.strModi = 0;
+      state.dex = 10;
+      state.dexModi = 0;
+      state.con = 10;
+      state.conModi = 0;
+      state.int = 10;
+      state.intModi =0;
+      state.win = 10;
+      state.winModi =0;
+      state.char = 10;
+      state.charModi =0;
+    },
+    halflingStats: state => {
+      state.str = 8;
+      state.strModi = -1;
+      state.dex = 12;
+      state.dexModi = 1;
+      state.con = 10;
+      state.conModi = 0;
+      state.int = 10;
+      state.intModi =0;
+      state.win = 10;
+      state.winModi =0;
+      state.char = 12;
+      state.charModi =1;
+    },
+    humanStats: state => {
+      state.str = 10;
+      state.strModi = 0;
+      state.dex = 10;
+      state.dexModi = 0;
+      state.con = 10;
+      state.conModi = 0;
+      state.int = 10;
+      state.intModi =0;
+      state.win = 10;
+      state.winModi =0;
+      state.char = 10;
+      state.charModi = 0;
+      state.styleButtonDisplay = "button_visible";
+      // ReactDOM.findDOMNode(<instance-o-outermost-component>).getElementsByClassName('snap');
+    },
+
 
 // DECREMENT STATS + MODIFY VALUE
 
@@ -143,6 +399,7 @@ export const slice = createSlice({
         return
       }
       state.str -= 1;
+      state.points += 1;
 
       if (state.str === 16) {
         state.strModi = 3;
@@ -175,6 +432,7 @@ export const slice = createSlice({
         return
       }
       state.dex -= 1;
+      state.points += 1;
 
       if (state.dex === 18) {
         state.dexModi = 4;
@@ -206,28 +464,144 @@ export const slice = createSlice({
       }
     },
     decrementInt: state => {
+      if (state.int === 3) {
+        return
+      }
       state.int -= 1;
+      state.points += 1;
+
+      if (state.int === 16) {
+        state.intModi = 3;
+      }
+      if (state.int === 14) {
+        state.intModi = 2;
+      }
+      if (state.int === 12) {
+        state.intModi = 1;
+      }
+      if (state.int === 11) {
+        state.intModi = 0;
+      }
+      if (state.int === 9) {
+        state.intModi = -1;
+      }
+      if (state.int === 7) {
+        state.intModi = -2;
+      }
+      if (state.int === 5) {
+        state.intModi = -3;
+      }
+      if (state.int === 3 ) {
+        state.intModi = -4;
+      }
     },
     decrementWin: state => {
+      if (state.win === 3) {
+        return
+      }
       state.win -= 1;
+      state.points += 1;
+
+      if (state.win === 16) {
+        state.winModi = 3;
+      }
+      if (state.win === 14) {
+        state.winModi = 2;
+      }
+      if (state.win === 12) {
+        state.winModi = 1;
+      }
+      if (state.win === 11) {
+        state.winModi = 0;
+      }
+      if (state.win === 9) {
+        state.winModi = -1;
+      }
+      if (state.win === 7) {
+        state.winModi = -2;
+      }
+      if (state.win === 5) {
+        state.winModi = -3;
+      }
+      if (state.win === 3 ) {
+        state.winModi = -4;
+      }
     },
     decrementCon: state => {
+      if (state.con === 3) {
+        return
+      }
       state.con -= 1;
+      state.points += 1;
+
+      if (state.con === 16) {
+        state.conModi = 3;
+      }
+      if (state.con === 14) {
+        state.conModi = 2;
+      }
+      if (state.con === 12) {
+        state.conModi = 1;
+      }
+      if (state.con === 11) {
+        state.conModi = 0;
+      }
+      if (state.con === 9) {
+        state.conModi = -1;
+      }
+      if (state.con === 7) {
+        state.conModi = -2;
+      }
+      if (state.con === 5) {
+        state.conModi = -3;
+      }
+      if (state.con === 3 ) {
+        state.conModi = -4;
+      }
     },
     decrementChar: state => {
+      if (state.char === 3) {
+        return
+      }
       state.char -= 1;
+      state.points += 1;
+
+      if (state.char === 16) {
+        state.charModi = 3;
+      }
+      if (state.char === 14) {
+        state.charModi = 2;
+      }
+      if (state.char === 12) {
+        state.charModi = 1;
+      }
+      if (state.char === 11) {
+        state.charModi = 0;
+      }
+      if (state.char === 9) {
+        state.charModi = -1;
+      }
+      if (state.char === 7) {
+        state.charModi = -2;
+      }
+      if (state.char === 5) {
+        state.charModi = -3;
+      }
+      if (state.char === 3 ) {
+        state.charModi = -4;
+      }
     },
 
-    incrementByAmount: (state, action) => {
-      state.value += action.payload;
-    }
+
+
   }
 });
 
 export const { 
   incrementStr, incrementDex, incrementInt, incrementCon, incrementWin, incrementChar, 
   decrementStr, decrementDex, decrementInt, decrementCon, decrementWin, decrementChar,
-  incrementByAmount } = slice.actions;
+  dwarfStats, elfStats, gnomeStats, halfElfStats, halfOrcStats, halflingStats, humanStats
+ } = slice.actions;
 
 export const selectStats = (state: any) => state.stats;
 
