@@ -241,7 +241,7 @@ export function Stats() {
           +
         </button>
         <Button 
-        className={styles.stats.styleButtonDisplay}
+        // className={styles.stats.styleButtonDisplay}
        
         > Add + 2 
           </Button> 

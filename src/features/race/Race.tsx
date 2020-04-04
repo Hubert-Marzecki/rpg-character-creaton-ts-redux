@@ -1,19 +1,16 @@
 import React, { useState, useRef, useImperativeHandle } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Button, Checkbox, Form, Statistic, Confirm, Reveal } from "semantic-ui-react";
+import { Button, Checkbox, Form, Statistic, Confirm, Reveal, ButtonProps } from "semantic-ui-react";
 
-import {
-  changeRace,
-  changeRaces,
-  AppStateRace,
-} from "./raceSlice";
+
 import {
   incrementStr, incrementDex, incrementInt, incrementCon, incrementWin, incrementChar, 
   decrementStr, decrementDex, decrementInt, decrementCon, decrementWin, decrementChar,
   selectStats, dwarfStats, elfStats, gnomeStats, halfElfStats, halfOrcStats, 
-  halflingStats, humanStats,
+  halflingStats, humanStats,changeRace,
 
   AppState,
+  RaceInfo,
 } from "../stats/statsSlice";
 
 import styles from "./Race.module.css";
@@ -22,42 +19,33 @@ import stylesStats from "./Stats.module.css";
 
 
 export function Race() {
-  const race: AppState = useSelector(changeRaces);
+  const state: AppState = useSelector(selectStats);
   const dispatch = useDispatch();
-  const [state, setState] = useState(false);
+  // const [state, setState] = useState(false);
 
-  function display () {
-    setState(!state)
-  }
+  // function display () {
+    // setState(!state)
+  // }
   // function open () { setState(true) }
   // const close = () => setState(false)
+
+  function raceButton(raceInfo: RaceInfo): JSX.Element {
+      return (
+        <Button onClick={() => dispatch(changeRace(raceInfo.race))}>
+          {raceInfo.name}
+        </Button>
+      );
+  }
 
   return (
     <div>
       <h1> CHOOSE RACE!</h1>
-      <Button
-      onClick={() => dispatch(dwarfStats())}
-      > Dwarf </Button>
+      {state.races.map(raceButton)}
 
-      <Button 
-      onClick={() => dispatch(elfStats())}
-      >  Elf </Button>
 
-      <Button 
-      onClick={() => dispatch(gnomeStats())}
-      >  Gnome </Button>
-
-<Button 
-      onClick={() => dispatch(halflingStats())}
-      > Halfling </Button>
-      
-      <Button 
-      onClick={() => dispatch(humanStats())}
-      > Human </Button>
-  
+      ,
         
 
-    <Button.Group  buttons={['Dwarf', 'Elf', 'Gnome','Half Elf', 'Half Orc', 'Halfling', 'Human']} />
 
  
     </div>
