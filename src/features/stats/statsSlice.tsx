@@ -4,10 +4,10 @@ import { Dispatch } from "react";
 import { Stats } from "./Stats";
 import { Visibility } from "semantic-ui-react";
 
-function modifierFromStat(stat: number): number {
+// Modyfikator liczony od wartości stats
+export function modifierFromStat(stat: number): number {
   return -5 + Math.floor(stat/2); 
 }
-
 
 export enum Stat {
   STR,
@@ -28,8 +28,6 @@ export enum Race {
   HALF_ORC,
 }
 
-
-
 export interface StatModification {
   stat: Stat,
   modifier: number
@@ -41,16 +39,20 @@ function statModification(stat: Stat, modifier: number ): StatModification {
     modifier: modifier
   };
 }
+// Pisząc to w ten sposób możemy zagnieździć KONKRETNE/NAZWANE krształby to których 
+// Możemy się potem bezpośredio odnosić
 
 export interface RaceInfo {
   // abilities, size, etc.
   race: Race;
   name: string,
+
+  // Przyjmuje tablice o1biektów o kszrtałcie StatModification
   statModifications: StatModification[]
 }
 
 
-function initRaceInfo(): RaceInfo[] {
+export function initRaceInfo(): RaceInfo[] {
   return [
     {
       race: Race.DWARF,
@@ -68,52 +70,108 @@ function initRaceInfo(): RaceInfo[] {
         statModification(Stat.STR, 2),
       ],
     },
+    {
+      race: Race.ELF,
+      name: "Elf",
+      statModifications: [
+        statModification(Stat.DEX, 2),
+        statModification(Stat.INT, 2),
+        statModification(Stat.CON, -2),
+      ],
+    },
+    {
+      race: Race.GNOME,
+      name: "Gnome",
+      statModifications: [
+        statModification(Stat.CON, 2),
+        statModification(Stat.CHA, 2),
+        statModification(Stat.STR, -2),
+      ],
+    },
+    {
+      race: Race.HALFLING,
+      name: "Halfling",
+      statModifications: [
+        statModification(Stat.DEX, 2),
+        statModification(Stat.CHA, 2),
+        statModification(Stat.STR, -2),
+      ],
+    },
+    
   ];
 }
 
+// CO TO ROBI DOKŁADNIE
+export function getStat(stat: Stat, state:AppState): number {
+  switch (stat) {
+    case Stat.STR: {
+      return state.str;
+    }
+    case Stat.DEX: {
+      return state.str;
+    }
+    case Stat.INT: {
+      return state.str;
+    }
+    case Stat.CON: {
+      return state.str;
+    }
+    case Stat.WIS: {
+      return state.str;
+    }
+    case Stat.CHA: {
+      return state.str;
+    }
+  }
+}
 
 
 export interface AppState {
+  // all avaliable races
   races: RaceInfo[];
   chosenRace: Race,
-  value: number;
+ 
   str: number;
   dex: number;
   int: number;
   con: number;
   win: number;
   char: number;
+
   strModi: number;
   dexModi: number;
   intModi: number;
   conModi: number;
   winModi: number;
   charModi: number;
+
   points: number;
-  race: string;
-  styleButtonDisplay: string;
+ 
+  
 }
 
 let initState = (): AppState => {
   return {
     races : initRaceInfo(),
     chosenRace: Race.HUMAN,
-    value: 0,
+    
     str: 10,  
     dex: 10,
     int: 10,
     con: 10,
     win: 10,
     char: 10,
+
     strModi: 0,
     dexModi: 0,
     intModi: 0,
     conModi: 0,
     winModi: 0,
     charModi: 0,
+
     points: 30,
-    race: "",
-    styleButtonDisplay: "hidden_button",
+    
+    
   };
 };
 
@@ -124,8 +182,18 @@ export const slice = createSlice({
 
 
     // INCREMENT STATS + MODIFY VALUE
-    changeRace: (state, action: PayloadAction<Race>) => {
+    // typu funkcja ktora przyjmuje aktualny stan i event ktory został wywołany przez użytkownika
+    // w tym wypadku, event trzyma w sobie rasę typuRace
+    // Podmień stan (chosenRace) na to co wybrał użytkownik
+    changeRace: (state: AppState, action: PayloadAction<Race>) => {
       state.chosenRace = action.payload;
+    },
+
+  riseStat: (state:AppState) => {
+      
+    },
+  dropStat: (state:AppState, action: PayloadAction<Race>)  => {
+
     },
 
     incrementStr: state => {
@@ -135,7 +203,7 @@ export const slice = createSlice({
       }
       state.str += 1;
       state.points -= 1;
-      state.strModi = modifierFromStat(state.str);
+      state.strModi = 0;
     },
     incrementDex: state => {
       if (state.dex === 18 || 
@@ -192,112 +260,6 @@ export const slice = createSlice({
 
     },
 
-    dwarfStats: state => {
-      state.str = 10;
-      state.strModi = 0;
-      state.dex = 10;
-      state.dexModi = 0;
-      state.con = 12;
-      state.conModi = 1;
-      state.int = 10;
-      state.intModi = 0;
-      state.win = 12;
-      state.winModi =1;
-      state.char = 8;
-      state.charModi = -1;
-    
-    },
-
-    elfStats: state => {
-      state.str = 10;
-      state.strModi = 0;
-      state.dex = 12;
-      state.dexModi = 1;
-      state.con = 8;
-      state.conModi = -1;
-      state.int = 12;
-      state.intModi =1;
-      state.win = 10;
-      state.winModi =0;
-      state.char = 10;
-      state.charModi = 0;
-    
-    },
-    gnomeStats: state => {
-      state.str = 8;
-      state.strModi = -1;
-      state.dex = 10;
-      state.dexModi = 0;
-      state.con = 12;
-      state.conModi = 1;
-      state.int = 10;
-      state.intModi =0;
-      state.win = 10;
-      state.winModi =0;
-      state.char = 12;
-      state.charModi =1;
-   
-    
-    },
-    halfElfStats: state => {
-      state.str = 10;
-      state.strModi = 0;
-      state.dex = 10;
-      state.dexModi = 0;
-      state.con = 10;
-      state.conModi = 0;
-      state.int = 10;
-      state.intModi =0;
-      state.win = 10;
-      state.winModi =0;
-      state.char = 10;
-      state.charModi =0;
-    },
-    halfOrcStats: state => {
-      state.str = 10;
-      state.strModi = 0;
-      state.dex = 10;
-      state.dexModi = 0;
-      state.con = 10;
-      state.conModi = 0;
-      state.int = 10;
-      state.intModi =0;
-      state.win = 10;
-      state.winModi =0;
-      state.char = 10;
-      state.charModi =0;
-    },
-    halflingStats: state => {
-      state.str = 8;
-      state.strModi = -1;
-      state.dex = 12;
-      state.dexModi = 1;
-      state.con = 10;
-      state.conModi = 0;
-      state.int = 10;
-      state.intModi =0;
-      state.win = 10;
-      state.winModi =0;
-      state.char = 12;
-      state.charModi =1;
-    },
-    humanStats: state => {
-      state.str = 10;
-      state.strModi = 0;
-      state.dex = 10;
-      state.dexModi = 0;
-      state.con = 10;
-      state.conModi = 0;
-      state.int = 10;
-      state.intModi =0;
-      state.win = 10;
-      state.winModi =0;
-      state.char = 10;
-      state.charModi = 0;
-      state.styleButtonDisplay = "button_visible";
-      // ReactDOM.findDOMNode(<instance-o-outermost-component>).getElementsByClassName('snap');
-    },
-
 
 // DECREMENT STATS + MODIFY VALUE
 
@@ -308,32 +270,7 @@ export const slice = createSlice({
       }
       state.str -= 1;
       state.points += 1;
-
-      if (state.str === 16) {
-        state.strModi = 3;
-      }
-      if (state.str === 14) {
-        state.strModi = 2;
-      }
-      if (state.str === 12) {
-        state.strModi = 1;
-      }
-      if (state.str === 11) {
-        state.strModi = 0;
-      }
-      if (state.str === 9) {
-        state.strModi = -1;
-      }
-      if (state.str === 7) {
-        state.strModi = -2;
-      }
-      if (state.str === 5) {
-        state.strModi = -3;
-      }
-      if (state.str === 3 ) {
-        state.strModi = -4;
-      }
-    
+      state.strModi = modifierFromStat(state.str);
     },
     decrementDex: state => {
       if (state.dex === 3) {
@@ -342,34 +279,8 @@ export const slice = createSlice({
       state.dex -= 1;
       state.points += 1;
 
-      if (state.dex === 18) {
-        state.dexModi = 4;
-      }
+      state.dexModi = modifierFromStat(state.dex);
 
-      if (state.dex === 16) {
-        state.dexModi = 3;
-      }
-      if (state.dex === 14) {
-        state.dexModi = 2;
-      }
-      if (state.dex === 12) {
-        state.dexModi = 1;
-      }
-      if (state.dex === 11) {
-        state.dexModi = 0;
-      }
-      if (state.dex === 9) {
-        state.dexModi = -1;
-      }
-      if (state.dex === 7) {
-        state.dexModi = -2;
-      }
-      if (state.dex === 5) {
-        state.dexModi = -3;
-      }
-      if (state.dex === 3 ) {
-        state.dexModi = -4;
-      }
     },
     decrementInt: state => {
       if (state.int === 3) {
@@ -378,30 +289,8 @@ export const slice = createSlice({
       state.int -= 1;
       state.points += 1;
 
-      if (state.int === 16) {
-        state.intModi = 3;
-      }
-      if (state.int === 14) {
-        state.intModi = 2;
-      }
-      if (state.int === 12) {
-        state.intModi = 1;
-      }
-      if (state.int === 11) {
-        state.intModi = 0;
-      }
-      if (state.int === 9) {
-        state.intModi = -1;
-      }
-      if (state.int === 7) {
-        state.intModi = -2;
-      }
-      if (state.int === 5) {
-        state.intModi = -3;
-      }
-      if (state.int === 3 ) {
-        state.intModi = -4;
-      }
+      state.intModi = modifierFromStat(state.int);
+
     },
     decrementWin: state => {
       if (state.win === 3) {
@@ -410,30 +299,8 @@ export const slice = createSlice({
       state.win -= 1;
       state.points += 1;
 
-      if (state.win === 16) {
-        state.winModi = 3;
-      }
-      if (state.win === 14) {
-        state.winModi = 2;
-      }
-      if (state.win === 12) {
-        state.winModi = 1;
-      }
-      if (state.win === 11) {
-        state.winModi = 0;
-      }
-      if (state.win === 9) {
-        state.winModi = -1;
-      }
-      if (state.win === 7) {
-        state.winModi = -2;
-      }
-      if (state.win === 5) {
-        state.winModi = -3;
-      }
-      if (state.win === 3 ) {
-        state.winModi = -4;
-      }
+      state.winModi = modifierFromStat(state.win);
+
     },
     decrementCon: state => {
       if (state.con === 3) {
@@ -441,31 +308,7 @@ export const slice = createSlice({
       }
       state.con -= 1;
       state.points += 1;
-
-      if (state.con === 16) {
-        state.conModi = 3;
-      }
-      if (state.con === 14) {
-        state.conModi = 2;
-      }
-      if (state.con === 12) {
-        state.conModi = 1;
-      }
-      if (state.con === 11) {
-        state.conModi = 0;
-      }
-      if (state.con === 9) {
-        state.conModi = -1;
-      }
-      if (state.con === 7) {
-        state.conModi = -2;
-      }
-      if (state.con === 5) {
-        state.conModi = -3;
-      }
-      if (state.con === 3 ) {
-        state.conModi = -4;
-      }
+      state.conModi = modifierFromStat(state.con);
     },
     decrementChar: state => {
       if (state.char === 3) {
@@ -473,42 +316,15 @@ export const slice = createSlice({
       }
       state.char -= 1;
       state.points += 1;
-
-      if (state.char === 16) {
-        state.charModi = 3;
-      }
-      if (state.char === 14) {
-        state.charModi = 2;
-      }
-      if (state.char === 12) {
-        state.charModi = 1;
-      }
-      if (state.char === 11) {
-        state.charModi = 0;
-      }
-      if (state.char === 9) {
-        state.charModi = -1;
-      }
-      if (state.char === 7) {
-        state.charModi = -2;
-      }
-      if (state.char === 5) {
-        state.charModi = -3;
-      }
-      if (state.char === 3 ) {
-        state.charModi = -4;
-      }
+      state.charModi = modifierFromStat(state.char);
     },
-
-
-
   }
 });
 
 export const { 
   incrementStr, incrementDex, incrementInt, incrementCon, incrementWin, incrementChar, 
   decrementStr, decrementDex, decrementInt, decrementCon, decrementWin, decrementChar,
-  dwarfStats, elfStats, gnomeStats, halfElfStats, halfOrcStats, halflingStats, humanStats, changeRace
+  changeRace
 } = slice.actions;
 
 export const selectStats = (state: any) => state.stats;

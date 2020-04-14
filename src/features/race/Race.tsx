@@ -6,8 +6,7 @@ import { Button, Checkbox, Form, Statistic, Confirm, Reveal, ButtonProps } from 
 import {
   incrementStr, incrementDex, incrementInt, incrementCon, incrementWin, incrementChar, 
   decrementStr, decrementDex, decrementInt, decrementCon, decrementWin, decrementChar,
-  selectStats, dwarfStats, elfStats, gnomeStats, halfElfStats, halfOrcStats, 
-  halflingStats, humanStats,changeRace,
+  selectStats, changeRace,
 
   AppState,
   RaceInfo,
@@ -41,10 +40,6 @@ export function Race() {
     <div>
       <h1> CHOOSE RACE!</h1>
       {state.races.map(raceButton)}
-
-
-      ,
-        
 
 
  
